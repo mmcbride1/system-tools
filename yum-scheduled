@@ -1,0 +1,78 @@
+#!/usr/bin/python
+
+#################
+# yum-scheduled #
+#################
+
+import os
+import sys
+from datetime import datetime as dt
+from subprocess import Popen, PIPE, STDOUT
+
+def get_upd_cmd():
+    """
+    Constructs the 
+    base update cmd
+    """
+    base = 'yum update -y'
+    return base
+
+def run_cmd(cmd):
+    """
+    Run the given
+    command and record
+    the output
+    """
+    try:
+        p = Popen(cmd, shell=True, 
+        stdout=PIPE, stderr=STDOUT)
+        return p.stdout.read()
+    except Exception, ex:
+        return str(ex)
+
+def get_log_path():
+    base = '/var/log'
+    logf = 'yum-scheduled.log'
+    full = os.path.join(base, logf)
+    return full
+
+def update_time():
+    """
+    Produces log
+    header to tag 
+    when update 
+    occurs    
+    """
+    now = dt.now()
+    fmt = now.strftime('%Y-%m-%d')
+    msg = '\n==== update record for %s ====\n\n'
+    return msg % (fmt)
+
+def write_log(input):
+    """
+    Write out 
+    the log file
+    """
+    p = get_log_path()
+    f = open(p, 'a')
+    f.write(update_time())
+    f.write(input)
+    f.close()
+
+def do_system_update():
+    """
+    Write out the 
+    update log
+    """
+    cmd = get_upd_cmd()
+    out = run_cmd(cmd)
+    write_log(out)
+
+# Run
+if __name__ == "__main__":
+    try:
+        do_system_update()
+    except Exception, ex:
+        print("" % str(ex))
+        sys.exit(1)
+
