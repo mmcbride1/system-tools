@@ -6,15 +6,36 @@
 
 import os
 import sys
+import subprocess as sp
 from datetime import datetime as dt
 from subprocess import Popen, PIPE, STDOUT
+
+# command to 
+# check the current
+# platform type
+OS = "python -mplatform | grep -i centos"
+
+def get_platform():
+    """
+    Get the os type
+    to generate the
+    needed update
+    prefix
+    """
+    try:
+        sp.check_output(
+        OS, shell=True)
+        return 'yum'
+    except:
+        return 'apt-get'
 
 def get_upd_cmd():
     """
     Constructs the 
     base update cmd
     """
-    base = 'yum update -y'
+    os = get_platform()
+    base = '%s update -y' % os
     return base
 
 def run_cmd(cmd):
