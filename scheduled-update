@@ -1,8 +1,8 @@
 #!/usr/bin/python
 
-#################
-# yum-scheduled #
-#################
+####################
+# scheduled-update #
+####################
 
 import os
 import sys
@@ -53,7 +53,7 @@ def run_cmd(cmd):
 
 def get_log_path():
     base = '/var/log'
-    logf = 'yum-scheduled.log'
+    logf = 'scheduled-update.log'
     full = os.path.join(base, logf)
     return full
 
