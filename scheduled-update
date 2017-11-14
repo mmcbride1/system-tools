@@ -15,6 +15,35 @@ from subprocess import Popen, PIPE, STDOUT
 # platform type
 OS = "python -mplatform | grep -i centos"
 
+def get_log_path():
+    base = '/var/log'
+    logf = 'scheduled-update.log'
+    full = os.path.join(base, logf)
+    return full
+
+def update_time():
+    """
+    Produces log
+    header to tag
+    when update
+    occurs
+    """
+    now = dt.now()
+    fmt = now.strftime('%Y-%m-%d')
+    msg = '\n==== update record for %s ====\n\n'
+    return msg % (fmt)
+
+def write_log(input):
+    """
+    Write out
+    the log file
+    """
+    p = get_log_path()
+    f = open(p, 'a')
+    f.write(update_time())
+    f.write(input)
+    f.close()
+
 def get_platform():
     """
     Get the os type
@@ -23,12 +52,17 @@ def get_platform():
     prefix
     """
     try:
-        sp.check_output(
-        OS, shell=True)
-        return 'yum'
-    except:
-        return 'apt-get'
-
+        os = sp.Popen(OS, shell=True,
+        stdout=PIPE)
+        os = os.communicate()[0]
+        if not os:
+            return 'apt-get'
+        else:
+            return 'yum'
+    except Exception, ex:
+        write_log(str(ex))
+        sys.exit(1)
+        
 def get_upd_cmd():
     """
     Constructs the 
@@ -51,35 +85,6 @@ def run_cmd(cmd):
     except Exception, ex:
         return str(ex)
 
-def get_log_path():
-    base = '/var/log'
-    logf = 'scheduled-update.log'
-    full = os.path.join(base, logf)
-    return full
-
-def update_time():
-    """
-    Produces log
-    header to tag 
-    when update 
-    occurs    
-    """
-    now = dt.now()
-    fmt = now.strftime('%Y-%m-%d')
-    msg = '\n==== update record for %s ====\n\n'
-    return msg % (fmt)
-
-def write_log(input):
-    """
-    Write out 
-    the log file
-    """
-    p = get_log_path()
-    f = open(p, 'a')
-    f.write(update_time())
-    f.write(input)
-    f.close()
-
 def do_system_update():
     """
     Write out the 
@@ -94,6 +99,6 @@ if __name__ == "__main__":
     try:
         do_system_update()
     except Exception, ex:
-        print("" % str(ex))
+        print(str(ex))
         sys.exit(1)
 
