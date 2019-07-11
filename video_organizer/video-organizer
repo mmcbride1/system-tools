@@ -9,15 +9,15 @@
 # Short-Description:  collect images
 ### END INIT INFO
 
-########### process files #############
-                                      #
-SERVICE=/opt/services                 #
-                                      #
-PID_FILE="/var/run/organizer.pid"     #
-                                      #
-PROCESS="$SERVICE/organizer.py"       #
-                                      #
-#######################################
+########### process files ####################
+                                             #
+SERVICE=/opt/system-tools                    #
+                                             #
+PID_FILE="/var/run/webcam-vid-organizer.pid" #
+                                             #
+PROCESS="$SERVICE/webcam-vid-organizer"      #
+                                             #
+##############################################
 
 # colors #
 RD='\033[0;31m'
