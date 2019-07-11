@@ -1,16 +1,26 @@
 #!/usr/bin/python
 
+#####################################
+# video organizer:                  #
+# Gathers the video files generated #
+# by the motion daemon into folders #
+# organized by date and time.       #
+# Note the files of interest        #
+# have a consistent naming          # 
+# convention                        #        
+#                                   #
+# 2019-07-10                        #
+#####################################
+
 import os
 import time
 from os import path
 from datetime import datetime
 
 # Videos folder #
-
-video_dir = '/Videos/'
+video_dir = '/videos/'
 
 # File name format #
-
 fmt = '%Y%m%d%H%M%S'
 
 def valid_format(fname):
@@ -73,7 +83,7 @@ def organize_videos():
    Main function
    """
    while True:
-      home = "/home/mattyaux"
+      home = "/home/webcam-share"
       scan_directory(home + video_dir)
       time.sleep(5)
 
