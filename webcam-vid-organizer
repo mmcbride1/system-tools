@@ -15,6 +15,7 @@
 import os
 import sys
 import time
+import shlex
 from os import path
 from datetime import datetime
 
@@ -24,16 +25,19 @@ conf_dir = '/etc/default/'
 # File name format #
 fmt = '%Y%m%d%H%M%S'
 
-def source_vid_path():
+def config():
    """
    Reads the configuration
-   for the video share path.
+   for the video share.
    This file must exist
    """
    name = 'webcam-vid-organizer'
    with open(conf_dir + name) as conf:
-      exec(conf.read())
-   return VID_PATH
+      settings = {
+      var: shlex.split(value) for var,
+      value in [line.split('=', 1) 
+      for line in fd]}
+   return settings
 
 def valid_format(fname):
    """ 
@@ -96,7 +100,7 @@ def organize_videos():
    """
    while True:
       try:
-         home = source_vid_path()
+         home = config()['VID_PATH'][0]
          scan_directory(home)
          time.sleep(5)
       except Exception as ex:
