@@ -96,7 +96,7 @@ def organize_videos():
    """
    while True:
       try:
-         home = source_vid_path
+         home = source_vid_path()
          scan_directory(home)
          time.sleep(5)
       except Exception as ex:
