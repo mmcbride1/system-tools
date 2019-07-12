@@ -30,7 +30,7 @@ def source_vid_path():
    for the video share path.
    This file must exist
    """
-   name = 'webcam-vid-organizer.conf'
+   name = 'webcam-vid-organizer'
    with open(conf_dir + name) as conf:
       exec(conf.read())
    return VID_PATH
