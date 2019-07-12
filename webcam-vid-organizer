@@ -33,10 +33,11 @@ def config():
    """
    name = 'webcam-vid-organizer'
    with open(conf_dir + name) as conf:
-      settings = {
-      var: shlex.split(value) for var,
-      value in [line.split('=', 1) 
-      for line in conf]}
+      settings = dict(
+         [(var, shlex.split(value))
+         for var, value in
+         [line.split('=', 1)
+         for line in conf]])
    return settings
 
 def valid_format(fname):
