@@ -13,15 +13,33 @@
 #####################################
 
 import os
+import sys
 import time
 from os import path
 from datetime import datetime
 
-# Videos folder #
-video_dir = '/videos/'
+# Videos conf file #
+conf_file = 'webcam-vid-organizer.conf'
 
 # File name format #
 fmt = '%Y%m%d%H%M%S'
+
+def source_vid_path():
+   """
+   Opens share configuration
+   to get configured share path
+   """
+   share_path = None
+   with open('/etc/webcam-share/' + conf_file) as conf:
+      for line in conf:
+         if 'VID_PATH' in line:
+            path = line.split('=')[1].strip()
+            share_path = path
+   if share_path is not None:
+      return share_path
+   else:
+      print("No share path configured")
+      sys.exit(1)
 
 def valid_format(fname):
    """ 
@@ -83,9 +101,13 @@ def organize_videos():
    Main function
    """
    while True:
-      home = "/home/webcam-share"
-      scan_directory(home + video_dir)
-      time.sleep(5)
+      try:
+         home = source_vid_path()
+         scan_directory(home)
+         time.sleep(5)
+      except Exception as ex:
+         print(str(ex))
+         sys.exit(1)
 
 # run #
 if __name__ == '__main__':
