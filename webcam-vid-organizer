@@ -13,15 +13,32 @@
 #####################################
 
 import os
+import sys
 import time
+import shlex
 from os import path
 from datetime import datetime
 
 # Videos folder #
-video_dir = '/videos/'
+conf_dir = '/etc/default/'
 
 # File name format #
 fmt = '%Y%m%d%H%M%S'
+
+def config():
+   """
+   Reads the configuration
+   for the video share.
+   This file must exist
+   """
+   name = 'webcam-vid-organizer'
+   with open(conf_dir + name) as conf:
+      settings = dict(
+         [(var, shlex.split(value))
+         for var, value in
+         [line.split('=', 1)
+         for line in conf]])
+   return settings
 
 def valid_format(fname):
    """ 
@@ -45,7 +62,7 @@ def name_new_file(dir_, f):
 def get_date_pfx(f):
    """
    Get date prefix 
-   for new file   
+   for new file
    """
    return f.split("-")[1][:14]
 
@@ -83,9 +100,13 @@ def organize_videos():
    Main function
    """
    while True:
-      home = "/home/webcam-share"
-      scan_directory(home + video_dir)
-      time.sleep(5)
+      try:
+         home = config()['VID_PATH'][0]
+         scan_directory(home)
+         time.sleep(5)
+      except Exception as ex:
+         print(str(ex))
+         sys.exit(1)
 
 # run #
 if __name__ == '__main__':
